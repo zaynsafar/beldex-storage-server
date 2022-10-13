@@ -1,0 +1,452 @@
+---
+{
+   "kind": "pipeline",
+   "name": "Debian (amd64)",
+   "platform": {
+      "arch": "amd64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache g++ libsodium-dev libsystemd-dev libboost-program-options-dev libcurl4-openssl-dev libsqlite3-dev libsodium-dev libssl-dev pkg-config autoconf make libjemalloc-dev",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=ON -DBUILD_TESTS=ON ",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "registry.beldex.rocks/belnet-ci-debian-sid",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "Debian Debug (amd64)",
+   "platform": {
+      "arch": "amd64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache g++ libsodium-dev libsystemd-dev libboost-program-options-dev libcurl4-openssl-dev libsqlite3-dev libsodium-dev libssl-dev pkg-config autoconf make libjemalloc-dev",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Debug -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=OFF -DBUILD_TESTS=ON ",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "debian:sid",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "Debian clang-11 (amd64)",
+   "platform": {
+      "arch": "amd64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache clang-11 libsystemd-dev libboost-program-options-dev libcurl4-openssl-dev libsqlite3-dev libsodium-dev libssl-dev pkg-config autoconf make libjemalloc-dev",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=ON -DBUILD_TESTS=ON -DCMAKE_C_COMPILER=clang-11 -DCMAKE_CXX_COMPILER=clang++-11 ",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "registry.beldex.rocks/belnet-ci-debian-sid",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "Debian buster (i386)",
+   "platform": {
+      "arch": "amd64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache libsystemd-dev libboost-program-options-dev libcurl4-openssl-dev libsqlite3-dev libsodium-dev libssl-dev pkg-config autoconf make libjemalloc-dev g++ make file",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=OFF -DBUILD_TESTS=ON -DDOWNLOAD_SODIUM=ON",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "i386/debian:buster",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "Ubuntu focal (amd64)",
+   "platform": {
+      "arch": "amd64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache g++ libsodium-dev libsystemd-dev libboost-program-options-dev libcurl4-openssl-dev libsqlite3-dev libsodium-dev libssl-dev pkg-config autoconf make libjemalloc-dev",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=OFF -DBUILD_TESTS=ON ",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "registry.beldex.rocks/belnet-ci-ubuntu-focal",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "Debian (ARM64)",
+   "platform": {
+      "arch": "arm64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache g++ libsodium-dev libsystemd-dev libboost-program-options-dev libcurl4-openssl-dev libsqlite3-dev libsodium-dev libssl-dev pkg-config autoconf make libjemalloc-dev",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=OFF -DBUILD_TESTS=ON ",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "debian:sid",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "Debian buster (armhf)",
+   "platform": {
+      "arch": "arm64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache libsystemd-dev libboost-program-options-dev libcurl4-openssl-dev libsqlite3-dev libsodium-dev libssl-dev pkg-config autoconf make libjemalloc-dev g++ make file",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=OFF -DBUILD_TESTS=ON -DDOWNLOAD_SODIUM=ON",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "arm32v7/debian:buster",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "Static (bionic amd64)",
+   "platform": {
+      "arch": "amd64"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "image": "drone/git",
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "echo \"Building on ${DRONE_STAGE_MACHINE}\"",
+            "echo \"man-db man-db/auto-update boolean false\" | debconf-set-selections",
+            "apt-get -o=Dpkg::Use-Pty=0 -q update",
+            "apt-get -o=Dpkg::Use-Pty=0 -q install -y eatmydata",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q dist-upgrade -y",
+            "eatmydata apt-get -o=Dpkg::Use-Pty=0 -q install -y --no-install-recommends cmake git ca-certificates ninja-build ccache g++-8 autoconf automake make file libtool pkg-config patch openssh-client",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=ON -DBUILD_TESTS=ON -DBUILD_STATIC_DEPS=ON -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test",
+            "../contrib/drone-check-static-libs.sh",
+            "ninja strip",
+            "ninja create_tarxz",
+            "../contrib/drone-static-upload.sh"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "image": "registry.beldex.rocks/belnet-ci-ubuntu-bionic",
+         "name": "build"
+      }
+   ],
+   "type": "docker"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "macOS (Static)",
+   "platform": {
+      "arch": "amd64",
+      "os": "darwin"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "export SDKROOT=\"$(xcrun --sdk macosx --show-sdk-path)\"",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fcolor-diagnostics -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=ON -DBUILD_TESTS=ON -DBUILD_STATIC_DEPS=ON",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test",
+            "../contrib/drone-check-static-libs.sh",
+            "ninja strip",
+            "ninja create_tarxz",
+            "../contrib/drone-static-upload.sh"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "name": "build"
+      }
+   ],
+   "type": "exec"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "macOS (Release)",
+   "platform": {
+      "arch": "amd64",
+      "os": "darwin"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "export SDKROOT=\"$(xcrun --sdk macosx --show-sdk-path)\"",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fcolor-diagnostics -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=OFF -DBUILD_TESTS=ON ",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "name": "build"
+      }
+   ],
+   "type": "exec"
+}
+---
+{
+   "kind": "pipeline",
+   "name": "macOS (Debug)",
+   "platform": {
+      "arch": "amd64",
+      "os": "darwin"
+   },
+   "steps": [
+      {
+         "commands": [
+            "git fetch --tags",
+            "git submodule update --init --recursive --depth=1"
+         ],
+         "name": "submodules"
+      },
+      {
+         "commands": [
+            "export SDKROOT=\"$(xcrun --sdk macosx --show-sdk-path)\"",
+            "mkdir build",
+            "cd build",
+            "cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fcolor-diagnostics -DCMAKE_BUILD_TYPE=Debug -DLOCAL_MIRROR=https://beldex.rocks/deps -DUSE_LTO=OFF -DBUILD_TESTS=ON ",
+            "ninja -j6 -v",
+            "./httpserver/beldex-storage --version",
+            "./unit_test/Test"
+         ],
+         "environment": {
+            "SSH_KEY": {
+               "from_secret": "SSH_KEY"
+            }
+         },
+         "name": "build"
+      }
+   ],
+   "type": "exec"
+}
