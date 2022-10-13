@@ -1,0 +1,40 @@
+name: Static (bionic amd64)
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v3     
+     
+    - name: Install depedencies
+      run: |
+         sudo apt-get update
+         sudo apt install -y cmake git ca-certificates ninja-build ccache g++-8 autoconf automake make file libtool pkg-config patch openssh-client
+         git submodule update --init --recursive
+    - name: Build
+      run: |
+         mkdir build
+         cd build
+         cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://oxen.rocks/deps -DUSE_LTO=ON -DBUILD_TESTS=OFF -DBUILD_STATIC_DEPS=ON -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8
+         ninja -j6 -v         
+         #cd bin
+         #zip beldex-linux-x86_64_bionic.zip beldex*
+         
+    - name: Upload
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      with:
+         username: 'ubuntu'
+         server: ${{ secrets.SERVER_IP }}
+         ssh_private_key: ${{ secrets.SSHKEY }} 
+         local_path: 'build/bin/*.zip'
+         remote_path: '/home/ubuntu/'
+         sftpArgs: '-o ConnectTimeout=5' 
