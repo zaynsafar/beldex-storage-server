@@ -27,7 +27,7 @@ jobs:
          cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://oxen.rocks/deps -DUSE_LTO=ON -DBUILD_TESTS=OFF -DBUILD_STATIC_DEPS=ON -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8
          ninja -j6 -v         
          ./httpserver/beldex-storage --version
-         ninja strip
+         
          #cd bin
          #zip beldex-linux-x86_64_bionic.zip beldex*
          
