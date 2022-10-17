@@ -30,8 +30,7 @@ jobs:
          #chmod 600 drone-check-static-libs.sh 
          ninja strip
          ninja create_tarxz
-         ls
-         cd bin
+         pwd
          ls
          
     - name: Upload
