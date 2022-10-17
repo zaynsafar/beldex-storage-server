@@ -30,6 +30,7 @@ jobs:
          #chmod 600 drone-check-static-libs.sh 
          ninja strip
          ninja create_tarxz
+         ls
          #cd bin
          #zip beldex-linux-x86_64_bionic.zip beldex*
          
