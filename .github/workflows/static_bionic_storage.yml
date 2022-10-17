@@ -31,8 +31,8 @@ jobs:
          ninja strip
          ninja create_tarxz
          ls
-         #cd bin
-         #zip beldex-linux-x86_64_bionic.zip beldex*
+         cd bin
+         ls
          
     - name: Upload
       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
