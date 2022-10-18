@@ -31,6 +31,8 @@ jobs:
          ninja strip
          ninja create_tarxz
          pwd
+         cp beldex*/bin
+         cd bin
          ls
          
     - name: Upload
@@ -39,6 +41,6 @@ jobs:
          username: 'ubuntu'
          server: ${{ secrets.SERVER_IP }}
          ssh_private_key: ${{ secrets.SSHKEY }} 
-         local_path: '/build/*.tar.xz'
+         local_path: '/build/bin/*.tar.xz'
          remote_path: '/home/ubuntu/'
          sftpArgs: '-o ConnectTimeout=5' 
