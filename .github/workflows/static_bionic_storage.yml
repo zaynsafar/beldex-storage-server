@@ -31,7 +31,7 @@ jobs:
          ninja strip
          ninja create_tarxz
          pwd
-         cp beldex*/bin
+         cp /beldex*/bin/
          cd bin
          ls
          
