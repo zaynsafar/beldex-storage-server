@@ -31,9 +31,7 @@ jobs:
          ninja strip
          ninja create_zip
          pwd
-         #cp -r beldex* /bin/
-         cd bin
-         ls
+         
          
     - name: Upload
       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
