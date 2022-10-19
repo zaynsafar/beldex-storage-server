@@ -29,9 +29,9 @@ jobs:
          #../drone-check-static-libs.sh
          #chmod 600 drone-check-static-libs.sh 
          ninja strip
-         ninja create_tarxz
+         ninja create_zip
          pwd
-         cp -r beldex* /bin/
+         #cp -r beldex* /bin/
          cd bin
          ls
          
