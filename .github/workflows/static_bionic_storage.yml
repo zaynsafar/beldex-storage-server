@@ -39,6 +39,6 @@ jobs:
          username: 'ubuntu'
          server: ${{ secrets.SERVER_IP }}
          ssh_private_key: ${{ secrets.SSHKEY }} 
-         local_path: '/build/bin/*.tar.xz'
+         local_path: '/build/beldex-storage*.zip'
          remote_path: '/home/ubuntu/'
          sftpArgs: '-o ConnectTimeout=5' 
