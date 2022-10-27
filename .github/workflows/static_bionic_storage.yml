@@ -26,20 +26,7 @@ jobs:
          cd build
          cmake .. -G Ninja -DCMAKE_CXX_FLAGS=-fdiagnostics-color=always -DCMAKE_BUILD_TYPE=Release -DLOCAL_MIRROR=https://oxen.rocks/deps -DUSE_LTO=ON -DBUILD_TESTS=OFF -DBUILD_STATIC_DEPS=ON -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8
          ninja -j6 -v   
-         #../drone-check-static-libs.sh
-         #chmod 600 drone-check-static-libs.sh 
          ninja strip
          ninja create_zip
          pwd
          ls
-         
-         
-    - name: Upload
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-      with:
-         username: 'ubuntu'
-         server: ${{ secrets.SERVER_IP }}
-         ssh_private_key: ${{ secrets.SSHKEY }} 
-         local_path: '/beldex-storage-linux-x86_64-2.2.1.*'
-         remote_path: '/home/ubuntu/'
-         sftpArgs: '-o ConnectTimeout=5' 
