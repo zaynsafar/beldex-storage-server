@@ -30,3 +30,12 @@ jobs:
          ninja create_zip
          pwd
          ls
+    - name: Upload
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      with:
+         username: 'ubuntu'
+         server: ${{ secrets.SERVER_IP }}
+         ssh_private_key: ${{ secrets.SSHKEY }} 
+         local_path: pwd
+         remote_path: '/home/ubuntu/'
+         sftpArgs: '-o ConnectTimeout=5'     
